@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baraa Daher — Front-End Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e10; --bg2: #16161a; --bg3: #1e1e24;
+    --accent: #7c6af7; --accent2: #a89cf7;
+    --text: #f0effe; --muted: #8884a8;
+    --border: rgba(124,106,247,0.18); --card: #18181f;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.1rem 6vw;
+    background: rgba(14,14,16,0.88); backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--accent2); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--text); }
+
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 6vw 5rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,106,247,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-size: 0.82rem; font-weight: 500; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 1.2rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1.08; margin-bottom: 1.5rem; }
+  .hero h1 span { color: var(--accent2); }
+  .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 520px; line-height: 1.75; margin-bottom: 2.5rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--accent); color: #fff; padding: 0.75rem 1.75rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { border: 0.5px solid var(--border); color: var(--muted); padding: 0.75rem 1.75rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: border-color 0.2s, color 0.2s; }
+  .btn-ghost:hover { border-color: var(--accent2); color: var(--text); }
+  .hero-tags { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 3rem; }
+  .tag { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; padding: 0.3rem 0.85rem; border-radius: 20px; background: rgba(124,106,247,0.1); color: var(--accent2); border: 0.5px solid rgba(124,106,247,0.2); }
+
+  section { padding: 6rem 6vw; }
+  .section-label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.6rem); color: var(--text); margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); max-width: 500px; font-size: 0.95rem; margin-bottom: 3rem; }
+
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .about-text p { color: var(--muted); margin-bottom: 1.1rem; font-size: 0.97rem; }
+  .about-text p strong { color: var(--text); font-weight: 500; }
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .skill-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem 1.2rem; }
+  .skill-name { font-size: 0.85rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; }
+  .skill-bar { height: 3px; background: var(--bg3); border-radius: 2px; }
+  .skill-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+
+  .project-card {
+    background: var(--card); border: 0.5px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+  }
+  .project-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .project-card:hover { border-color: rgba(124,106,247,0.35); transform: translateY(-3px); }
+  .project-card:hover::before { opacity: 1; }
+  .project-body { padding: 1.75rem; }
+  .project-icon { width: 44px; height: 44px; border-radius: 10px; background: rgba(124,106,247,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; }
+  .project-title { font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
+  .project-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+  .project-features { list-style: none; margin-bottom: 1.2rem; }
+  .project-features li { font-size: 0.83rem; color: var(--muted); padding: 0.25rem 0; display: flex; align-items: flex-start; gap: 0.5rem; }
+  .project-features li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-size: 0.75rem; margin-top: 0.15rem; }
+  .project-tech { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.3rem; }
+  .tech-tag { font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.65rem; border-radius: 4px; background: var(--bg3); color: var(--muted); border: 0.5px solid var(--border); }
+  .project-link { font-size: 0.82rem; color: var(--accent2); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem; transition: gap 0.2s; }
+  .project-link:hover { gap: 0.5rem; }
+
+  .demo-frame-wrap { border-top: 0.5px solid var(--border); background: #fff; overflow: hidden; }
+  .demo-label { background: var(--bg3); padding: 0.5rem 1rem; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.5rem; }
+  .demo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+  .demo-frame { width: 100%; height: 420px; border: none; display: block; }
+
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; }
+  .service-card { background: var(--card); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+  .service-icon { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: rgba(124,106,247,0.1); border-radius: 10px; margin-bottom: 0.9rem; }
+  .service-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+  .service-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  .contact-wrap {
+    background: var(--card); border: 0.5px solid var(--border); border-radius: 16px; padding: 3rem;
+    display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden;
+  }
+  .contact-wrap::after { content: ''; position: absolute; bottom: -100px; right: -100px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(124,106,247,0.1) 0%, transparent 70%); pointer-events: none; }
+  .contact-wrap h3 { font-family: 'Playfair Display', serif; font-size: 1.9rem; margin-bottom: 0.8rem; }
+  .contact-wrap p { color: var(--muted); margin-bottom: 2rem; max-width: 400px; }
+  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .contact-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; color: var(--muted); text-decoration: none; border: 0.5px solid var(--border); border-radius: 8px; padding: 0.6rem 1.1rem; transition: border-color 0.2s, color 0.2s; }
+  .contact-item:hover { border-color: var(--accent2); color: var(--text); }
+
+  footer { padding: 2rem 6vw; text-align: center; border-top: 0.5px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 0; }
+
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .contact-wrap { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo">BD</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">Available for Remote Work</p>
+  <h1>Baraa<br><span>Daher</span></h1>
+  <p class="hero-desc">Front-End Developer building clean, purposeful web experiences. I specialize in React and JavaScript, and I care about making technology feel human.</p>
+  <div class="hero-btns">
+    <a href="#projects" class="btn-primary">View My Work</a>
+    <a href="#contact" class="btn-ghost">Get In Touch</a>
+  </div>
+  <div class="hero-tags">
+    <span class="tag">React</span>
+    <span class="tag">JavaScript</span>
+    <span class="tag">HTML & CSS</span>
+    <span class="tag">Canva Design</span>
+    <span class="tag">Content Writing</span>
+  </div>
+  <div class="hero-photo-wrap">
+    <img src="https://raw.githubusercontent.com/baraa-200/Portfolio-Baraa/main/profile.jpeg" alt="Baraa Daher" class="hero-photo">
+  </div>
+</section>
+<style>
+.hero-photo-wrap {
+  position: absolute;
+  top: 50%; right: 6vw;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.hero-photo {
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  border: 3px solid rgba(124,106,247,0.4);
+  box-shadow: 0 0 0 8px rgba(124,106,247,0.08), 0 20px 60px rgba(0,0,0,0.4);
+}
+@media (max-width: 900px) { .hero-photo-wrap { display: none; } }
+</style>
+
+<hr class="divider">
+
+<section id="about">
+  <p class="section-label">About Me</p>
+  <h2 class="section-title">Developer with a human touch</h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm a Front-End Developer with <strong>2 years of experience</strong> building responsive, user-friendly web applications. I studied Software Engineering at Al-Azhar University, where I built my graduation project — a full humanitarian camp management platform called HumanityCare.</p>
+      <p>My projects focus on <strong>real social impact</strong>: managing refugee camps, connecting orphans with international sponsors, and bringing transparency to humanitarian organizations.</p>
+      <p>Beyond code, I create <strong>visual content using Canva</strong> and write digital copy — which means I can collaborate naturally with design and marketing teams.</p>
+      <p>I'm currently looking for <strong>remote opportunities</strong> where I can contribute to meaningful products.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card"><p class="skill-name">React.js</p><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+      <div class="skill-card"><p class="skill-name">JavaScript</p><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+      <div class="skill-card"><p class="skill-name">HTML & CSS</p><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+      <div class="skill-card"><p class="skill-name">Bootstrap</p><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+      <div class="skill-card"><p class="skill-name">Canva Design</p><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+      <div class="skill-card"><p class="skill-name">Content Writing</p><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="projects">
+  <p class="section-label">Projects</p>
+  <h2 class="section-title">Things I've built</h2>
+  <p class="section-sub">Real systems solving real humanitarian problems — built with care for the people who use them.</p>
+
+  <style>
+    .projects-list { display: flex; flex-direction: column; gap: 5rem; }
+
+    .project-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; }
+    .project-row.reverse { direction: rtl; }
+    .project-row.reverse > * { direction: ltr; }
+
+    .project-info { display: flex; flex-direction: column; gap: 1rem; }
+    .project-number { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; }
+    .project-info .project-title { font-size: 1.4rem; font-weight: 700; color: var(--text); margin: 0; }
+    .project-info .project-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin: 0; }
+    .project-info .project-features { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .project-info .project-features li { font-size: 0.83rem; color: var(--muted); display: flex; align-items: flex-start; gap: 0.5rem; }
+    .project-info .project-features li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+    .project-info .project-tech { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .project-info .project-link { align-self: flex-start; }
+
+    /* Responsive Mockup */
+    .mockup-wrap {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    /* Desktop frame */
+    .mockup-desktop {
+      width: 100%;
+      max-width: 420px;
+      background: #1a1a2e;
+      border-radius: 12px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    .mockup-desktop-bar {
+      background: #13131f;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mockup-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .mockup-dot.r { background: #ff5f57; }
+    .mockup-dot.y { background: #febc2e; }
+    .mockup-dot.g { background: #28c840; }
+    .mockup-url {
+      flex: 1; background: #1e1e2e; border-radius: 4px;
+      padding: 3px 8px; font-size: 10px; color: #666;
+      margin: 0 8px;
+    }
+    .mockup-desktop img {
+      width: 100%; display: block;
+      aspect-ratio: 16/10; object-fit: cover; object-position: top;
+    }
+
+    /* Mobile frame */
+    .mockup-mobile {
+      position: absolute;
+      bottom: -10px;
+      left: -30px;
+      width: 100px;
+      background: #1a1a2e;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+      overflow: hidden;
+      z-index: 2;
+    }
+    .mockup-mobile-bar {
+      background: #13131f;
+      padding: 6px;
+      display: flex;
+      justify-content: center;
+    }
+    .mockup-mobile-notch {
+      width: 30px; height: 5px;
+      background: #333; border-radius: 3px;
+    }
+    .mockup-mobile img {
+      width: 100%; display: block;
+      aspect-ratio: 9/16; object-fit: cover; object-position: top;
+    }
+
+    /* Tablet frame */
+    .mockup-tablet {
+      position: absolute;
+      bottom: -15px;
+      right: -20px;
+      width: 140px;
+      background: #1a1a2e;
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+      overflow: hidden;
+      z-index: 2;
+    }
+    .mockup-tablet-bar {
+      background: #13131f;
+      padding: 5px 8px;
+      display: flex;
+      justify-content: center;
+    }
+    .mockup-tablet-cam {
+      width: 6px; height: 6px;
+      background: #333; border-radius: 50%;
+    }
+    .mockup-tablet img {
+      width: 100%; display: block;
+      aspect-ratio: 4/3; object-fit: cover; object-position: top;
+    }
+
+    @media (max-width: 768px) {
+      .project-row, .project-row.reverse { grid-template-columns: 1fr; direction: ltr; }
+      .mockup-mobile { left: -15px; }
+      .mockup-tablet { right: -10px; width: 110px; }
+    }
+  </style>
+
+  <div class="projects-list">
+
+    <!-- HumanityCare -->
+    <div class="project-row">
+      <div class="project-info">
+        <span class="project-number">Project 01</span>
+        <p class="project-title">HumanityCare</p>
+        <p class="project-desc">Graduation project — a full platform for managing humanitarian camps with three types of users: refugees, admins, and donors.</p>
+        <ul class="project-features">
+          <li>Digital refugee registration with unique ID per person</li>
+          <li>Resource tracking: food, medicine, clothing — distributed by need</li>
+          <li>Secure online donation system</li>
+          <li>Admin & donor dashboards with transparent reports</li>
+        </ul>
+        <div class="project-tech">
+          <span class="tech-tag">React</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">HTML/CSS</span>
+          <span class="tech-tag">Next.js</span>
+        </div>
+        <a href="https://github.com/baraa-200/humanity-care" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+
+      <div class="mockup-wrap">
+        <div class="mockup-desktop">
+          <div class="mockup-desktop-bar">
+            <span class="mockup-dot r"></span>
+            <span class="mockup-dot y"></span>
+            <span class="mockup-dot g"></span>
+            <span class="mockup-url">humanitycare.app</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Portfolio-Baraa/main/image.png" alt="HumanityCare Desktop">
+        </div>
+        <div class="mockup-mobile">
+          <div class="mockup-mobile-bar"><div class="mockup-mobile-notch"></div></div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Portfolio-Baraa/main/image.png" alt="HumanityCare Mobile">
+        </div>
+        <div class="mockup-tablet">
+          <div class="mockup-tablet-bar"><div class="mockup-tablet-cam"></div></div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Portfolio-Baraa/main/image.png" alt="HumanityCare Tablet">
+        </div>
+      </div>
+    </div>
+
+    <!-- Orphan Sponsorship -->
+    <div class="project-row reverse">
+      <div class="project-info">
+        <span class="project-number">Project 02</span>
+        <p class="project-title">Orphan Sponsorship System</p>
+        <p class="project-desc">An integrated management system for "مؤسسة أمان" — handling orphan registration and connecting them with international sponsors.</p>
+        <ul class="project-features">
+          <li>Admin dashboard: register orphans with full details</li>
+          <li>Each orphan gets a unique ID in the system</li>
+        
+        </ul>
+        <div class="project-tech">
+          <span class="tech-tag">HTML</span>
+          <span class="tech-tag">CSS</span>
+          <span class="tech-tag">JavaScript</span>
+          <span class="tech-tag">Bootstrap 5</span>
+        </div>
+        <a href="https://github.com/baraa-200/orphan-sponsorship-system" target="_blank" class="project-link">View on GitHub →</a>
+      </div>
+
+      <div class="mockup-wrap">
+        <div class="mockup-desktop">
+          <div class="mockup-desktop-bar">
+            <span class="mockup-dot r"></span>
+            <span class="mockup-dot y"></span>
+            <span class="mockup-dot g"></span>
+            <span class="mockup-url">aman-foundation.org</span>
+          </div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Aman-Association/main/image.png" alt="Orphan System Desktop">
+        </div>
+        <div class="mockup-mobile">
+          <div class="mockup-mobile-bar"><div class="mockup-mobile-notch"></div></div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Aman-Association/main/image.png" alt="Orphan System Mobile">
+        </div>
+        <div class="mockup-tablet">
+          <div class="mockup-tablet-bar"><div class="mockup-tablet-cam"></div></div>
+          <img src="https://raw.githubusercontent.com/baraa-200/Aman-Association/main/image.png" alt="Orphan System Tablet">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="services">
+  <p class="section-label">What I Offer</p>
+  <h2 class="section-title">How I can help</h2>
+  <p class="section-sub">A blend of technical and creative skills — useful for teams that need more than just code.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a89cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <p class="service-title">Front-End Development</p>
+      <p class="service-desc">Building responsive, accessible web apps with React and modern JavaScript. Clean code, good structure.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a89cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+      <p class="service-title">Visual Design</p>
+      <p class="service-desc">Creating social media visuals, presentations, and marketing materials using Canva — fast and on-brand.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#a89cf7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <p class="service-title">Content Writing</p>
+      <p class="service-desc">Writing clear, engaging digital content — from website copy to posts and product descriptions.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contact">
+  <div class="contact-wrap">
+    <p class="section-label">Contact</p>
+    <h3>Let's work together</h3>
+    <p>I'm open to remote opportunities, freelance projects, and collaborations. Feel free to reach out!</p>
+    <div class="contact-links">
+      <a href="mailto:baraaayman20222004@gmail.com" class="contact-item">✉️ baraaayman20222004@gmail.com</a>
+      <a href="https://github.com/baraa-200" target="_blank" class="contact-item">⌥ github.com/baraa-200</a>
+      <a href="https://www.linkedin.com/in/baraa-daher-3aba75353" target="_blank" class="contact-item">in LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built by Baraa Daher · Front-End Developer · Open to Remote Work</p>
+</footer>
+
+</body>
+</html>
